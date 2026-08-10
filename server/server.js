@@ -271,6 +271,13 @@ function handleApi(req, res, url) {
         incoming.forEach(function (x) {
           const rec = sanitizeUser(x, true);
           if (!rec || !rec.username) return;
+          const existing = byName[rec.username]; // 库中已有记录（含真实 salt/passHash）
+          // 前端从 GET 拿到的公开记录（publicUser）不含 salt/passHash；
+          // 若传入未带，则沿用服务端已有值，避免把他人/自己的密码哈希误清空。
+          if (existing) {
+            if (!rec.salt && existing.salt) rec.salt = existing.salt;
+            if (!rec.passHash && existing.passHash) rec.passHash = existing.passHash;
+          }
           byName[rec.username] = rec; // upsert，绝不删除他人
         });
         DB.users = Object.keys(byName).map(function (k) { return byName[k]; });
@@ -295,7 +302,14 @@ function handleApi(req, res, url) {
       if (!u) return sendJSON(res, 401, { error: 'Não autenticado' });
       if (!u.isAdmin && u.username !== un) return sendJSON(res, 403, { error: 'Apenas administrador ou o próprio usuário' });
       return readBody(req).then(function (b) {
-        const rec = sanitizeUser(Object.assign({}, b, { username: un }), u.isAdmin);
+        const existing = DB.users.filter(function (x) { return x.username === un; })[0];
+        const incomingRec = Object.assign({}, b, { username: un });
+        // 同上：若传入未带 salt/passHash，则保留服务端已有哈希，避免误清空
+        if (existing) {
+          if (!incomingRec.salt && existing.salt) incomingRec.salt = existing.salt;
+          if (!incomingRec.passHash && existing.passHash) incomingRec.passHash = existing.passHash;
+        }
+        const rec = sanitizeUser(incomingRec, u.isAdmin);
         const idx = DB.users.findIndex(function (x) { return x.username === un; });
         if (idx < 0) DB.users.push(rec); else DB.users[idx] = rec;
         saveDB(DB);

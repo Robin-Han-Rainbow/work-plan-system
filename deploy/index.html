@@ -1553,11 +1553,17 @@ if(_wn) _wn.addEventListener('click',function(e){ e.preventDefault(); e.stopProp
     var users=loadUsers()||[];
     var base='user', n=1, name=base+n;
     while(users.some(function(x){ return x.username===name; })){ n++; name=base+n; }
+    var pw=prompt('Definir senha para o novo usuário "'+name+'" (mín. 6 caracteres):');
+    if(pw===null) return; pw=pw.trim();
+    if(pw.length<6){ alert('A senha deve ter pelo menos 6 caracteres'); return; }
+    var salt=randSalt();
     var dept=DEPTS[0]; var region=(REGIONS[dept]&&REGIONS[dept].length)?REGIONS[dept][0]:'All';
-    users.push({ username:name, name:'', salt:'', passHash:'', dept:dept, region:region, mgrAccess:false, canAccessMgr:false, allowedDepts:[], allowedRegions:[], isAdmin:false, mustChange:true });
-    saveUsers(users); renderPermTable();
-    Array.prototype.forEach.call(document.querySelectorAll('#permTbody tr[data-user]'), function(tr){
-      if(tr.getAttribute('data-user')===name){ var inp=tr.querySelector('.perm-input'); if(inp) setTimeout(function(){ inp.focus(); }, 30); }
+    hashPass(pw, salt).then(function(hash){
+      users.push({ username:name, name:'', salt:salt, passHash:hash, dept:dept, region:region, mgrAccess:false, canAccessMgr:false, allowedDepts:[], allowedRegions:[], isAdmin:false, mustChange:false });
+      saveUsers(users); renderPermTable();
+      Array.prototype.forEach.call(document.querySelectorAll('#permTbody tr[data-user]'), function(tr){
+        if(tr.getAttribute('data-user')===name){ var inp=tr.querySelector('.perm-input'); if(inp) setTimeout(function(){ inp.focus(); }, 30); }
+      });
     });
   }
   function onNameChange(input){

@@ -1,0 +1,51 @@
+{
+  "users": [
+    {
+      "username": "admin",
+      "name": "Administrador",
+      "salt": "61017c637a1d1fe4",
+      "passHash": "v1$3a1405dd0140b87378d6a81abc4265d6cfbf8664c7d1fb0cbec11009d45e3cbe",
+      "dept": "Management",
+      "region": "All",
+      "mgrAccess": true,
+      "canAccessMgr": true,
+      "allowedDepts": [
+        "All"
+      ],
+      "allowedRegions": [
+        "All"
+      ],
+      "isAdmin": true,
+      "mustChange": true
+    },
+    {
+      "username": "userA",
+      "name": "",
+      "salt": "cd989bfe454dd0cd",
+      "passHash": "v1$8b563c491ce09dc5a5ed7396847dd6af1b54a6526b8ed4a7c0d441ab3f6062c3",
+      "dept": "A",
+      "region": "B",
+      "mgrAccess": false,
+      "canAccessMgr": false,
+      "allowedDepts": [],
+      "allowedRegions": [],
+      "isAdmin": false,
+      "mustChange": false
+    },
+    {
+      "username": "userB",
+      "name": "",
+      "salt": "840f91c2824f0b0e",
+      "passHash": "v1$1a232a7e267788c864ed70b98e246d8a659a74393c4c9236d81b6efa1a95f3c1",
+      "dept": "A",
+      "region": "B",
+      "mgrAccess": false,
+      "canAccessMgr": false,
+      "allowedDepts": [],
+      "allowedRegions": [],
+      "isAdmin": false,
+      "mustChange": false
+    }
+  ],
+  "secret": "efc90073bf2c3d458569049870160a40ab6a2ecc460920b7e8c8568e63049ed0"
+}
