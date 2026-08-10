@@ -1,0 +1,26 @@
+# Render.com Blueprint —— 一键部署 Work Plan Management System（前端 + 零依赖 Node 后端）
+# 用法：在 render.com 控制台 "New" → "Blueprint" → 关联本仓库，Render 会自动按此文件建服务。
+services:
+  - type: web
+    name: work-plan-system
+    runtime: node
+    plan: free
+    branch: main            # 若你的仓库默认分支是 master，请改成 master
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    healthCheckPath: "/"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0      # 监听所有网卡，Render 才能从外部访问
+      - key: PORT
+        sync: false         # Render 会自动注入 PORT，无需手填
+    # ---- 数据持久化（重要）----
+    # Free 计划不支持磁盘，db.json（账号库）在每次重启/重新部署后会重置为种子 admin。
+    # 若要账号长期保留，请升级到支持磁盘的计划，并取消下方注释（同时 render.yaml 所在服务需为付费计划）：
+    # disks:
+    #   - name: data
+    #     mountPath: /app/server/data
+    #     sizeGB: 1
+    # 挂载后 DB_FILE 默认即为 /app/server/data/db.json，无需额外环境变量。

@@ -1,0 +1,4 @@
+# 服务端账号库（含 admin 密码哈希与签名密钥）——切勿提交到公开仓库
+server/data/db.json
+# 依赖（本项目零依赖，npm install 为 no-op，但保留以防拓展）
+node_modules/

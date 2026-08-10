@@ -1,0 +1,12 @@
+{
+  "name": "work-plan-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Work Plan Management System — 前端工作台 + 零依赖 Node 后端（账号同步 / 鉴权）",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
